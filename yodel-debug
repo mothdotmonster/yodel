@@ -4,35 +4,49 @@
 # a script for making formatted text output a bit more easy
 
 printhelptext(){
-	printf "yodel v0.2.0\n\n--help - print this text\n-b / --bold - print \033[1mbold\033[m text\n-l / --light - print \033[2mlight\033[m text\n-i / --italic - print \033[3mitalic\033[m text\n-u / --underline - print \033[4munderlined\033[m text\n-c / --color (red,green,yellow,blue,magenta,cyan) - print \033[31mcolored\033[m text\n-x / --color-indexed [0-255] - print \033[38;5;123m255-color\033[m text\n-r / --color-rgb [0-255] [0-255] [0-255] - print full \033[38;2;255;0;0mR\033[38;2;0;255;0mG\033[38;2;0;0;255mB\033[m text\n-n / --no-newline - disable trailing newline\n"
+	printf "yodel v0.2.0 (debug version)\n\n--help - print this text\n-b / --bold - print \033[1mbold\033[m text\n-l / --light - print \033[2mlight\033[m text\n-i / --italic - print \033[3mitalic\033[m text\n-u / --underline - print \033[4munderlined\033[m text\n-c / --color (red,green,yellow,blue,magenta,cyan) - print \033[31mcolored\033[m text\n-x / --color-indexed [0-255] - print \033[38;5;123m255-color\033[m text\n-r / --color-rgb [0-255] [0-255] [0-255] - print full \033[38;2;255;0;0mR\033[38;2;0;255;0mG\033[38;2;0;0;255mB\033[m text\n-n / --no-newline - disable trailing newline\n"
 }
 
 if [ $# -eq 0 ]; then # help clueless users
+		echo "DEBUG: no arguments, printing help text..."
     printhelptext
     exit 1
 fi
 
 while [ "$1" != "" ]; do # check if we have any args left
+
 	case "$1" in
 		--*)
+			echo "DEBUG: long flag detected..."
+			echo "DEBUG: long flag is $1"
 			case "${1#--}" in
 				help)
+					echo "DEBUG: help requested..."
 					printhelptext
 					exit
 				;;
 				bold)
+					echo "DEBUG: add bold to format string"
 					fstr="$fstr\033[1m"
+					echo "DEBUG: format string is now $fstr"
 				;;
 				light)
+					echo "DEBUG: enlighten format string"
 					fstr="$fstr\033[2m"
+					echo "DEBUG: format string is now $fstr"
 				;;
 				italic)
+					echo "DEBUG: add italic to format string"
 					fstr="$fstr\033[3m"
+					echo "DEBUG: format string is now $fstr"
 				;;
 				underline)
+					echo "DEBUG: add underline to format string"
 					fstr="$fstr\033[4m"
+					echo "DEBUG: format string is now $fstr"
 				;;
 				color)
+					echo "DEBUG: add color to format string"
 						case "$2" in
 							red)
 								fstr="$fstr\033[31m"
@@ -58,40 +72,58 @@ while [ "$1" != "" ]; do # check if we have any args left
 							;;
 						esac
 					shift #remove the color name
+					echo "DEBUG: format string is now $fstr"
 				;;
 				color-rgb)
+					echo "DEBUG: add rgb color to format string"
 					fstr="$fstr\033[38;2;$2;$3;$4m"
 					shift 3 # remove the rgb colors
+					echo "DEBUG: format string is now $fstr"
 				;;
 				color-indexed)
+					echo "DEBUG: add indexed color to format string"
 					fstr="$fstr\033[38;5;$2m"
 					shift # remove the color
+					echo "DEBUG: format string is now $fstr"
 				;;
 				no-newline)
+					echo "DEBUG: set a variable for later"
 					n=true
 				;;
 				*)
+					echo "DEBUG: that's not a valid flag, panicking..."
 					exit
 				;;
 			esac
 		;;
 		-*)
+			echo "DEBUG: short flag(s) detected..."
+			echo "DEBUG: the short flags are ${1#-}"
 			sflg="${1#-}"
 			while [ "$sflg" != "" ]; do
 				case "$sflg" in
 					b*)
+						echo "DEBUG: add bold to format string"
 						fstr="$fstr\033[1m"
+						echo "DEBUG: format string is now $fstr"
 					;;
 					l*)
+						echo "DEBUG: enlighten format string"
 						fstr="$fstr\033[2m"
+						echo "DEBUG: format string is now $fstr"
 					;;
 					i*)
+						echo "DEBUG: add italic to format string"
 						fstr="$fstr\033[3m"
+						echo "DEBUG: format string is now $fstr"
 					;;
 					u*)
+						echo "DEBUG: add underline to format string"
 						fstr="$fstr\033[4m"
+						echo "DEBUG: format string is now $fstr"
 					;;
 					c*)
+						echo "DEBUG: add basic color to format string"
 							case "$2" in
 								red)
 									fstr="$fstr\033[31m"
@@ -117,16 +149,22 @@ while [ "$1" != "" ]; do # check if we have any args left
 								;;
 							esac
 						shift # remove the color name
+						echo "DEBUG: format string is now $fstr"
 					;;
 					r*)
+						echo "DEBUG: add rgb color to format string"
 						fstr="$fstr\033[38;2;$2;$3;$4m"
 						shift 3 #remove the rgb colors
+						echo "DEBUG: format string is now $fstr"
 					;;
 					x*)
+						echo "DEBUG: add indexed color to format string"
 						fstr="$fstr\033[38;5;$2m"
 						shift # remove the color
+						echo "DEBUG: format string is now $fstr"
 					;;
 					n*)
+						echo "DEBUG: set a variable for later"
 						n=true
 					;;
 					*)
@@ -135,9 +173,11 @@ while [ "$1" != "" ]; do # check if we have any args left
 					;;
 				esac
 				sflg=$(printf %s "$sflg" | cut -c2-) # looks bad but posix sh doesn't have string indexing
+				echo "DEBUG: the short flags left are now $sflg"
 			done
 		;;
 		*)
+			echo "DEBUG: no flags detected, time to print the actual output..."
 			if [ -n "$n" ]; then
 				printf "$fstr%s\033[m" "$1"
 			else
@@ -146,5 +186,6 @@ while [ "$1" != "" ]; do # check if we have any args left
 			exit
 		;;
 	esac
+	echo "DEBUG: removing flag..." 
 	shift # go to next argument
 done
