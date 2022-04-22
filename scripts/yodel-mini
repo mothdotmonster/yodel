@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# yodel v0.2.0 mini
+# This is a minified version of yodel, intended for those who want to embed it into another script to avoid dependencies.
+
+b(){ f="$f\033[1m";};l(){ f="$f\033[2m";};i(){ f="$f\033[3m";};u(){ f="$f\033[4m";};c(){ case "$1" in red)f="$f\033[31m";;green)f="$f\033[32m";;yellow)f="$f\033[33m";;blue)f="$f\033[34m";;magenta)f="$f\033[35m";;cyan)f="$f\033[36m";;*)exit;;esac;};r(){ f="$f\033[38;2;$1;$2;$3m";};x(){ f="$f\033[38;5;$1m";};while [ "$1" != "" ]; do case "$1" in --*)case "${1#--}" in bold)b;;light)l;;italic)i;;underline)u;;color)c "$2";shift;;color-rgb)r "$2" "$3" "$4";shift 3;;color-indexed)x "$2";shift;;no-newline)n=1;;esac;;-*)s="${1#-}";while [ "$s" != "" ]; do case "$s" in b*)b;;l*)l;;i*)i;;u*)u;;c*)c "$2";shift;;r*)r "$2" "$3" "$4";shift 3;;x*)x "$2";shift;;n*)n=1;;esac;s=$(printf %s "$s" | cut -c2-);done;;*)if [ -n "$n" ]; then printf "$f%s\033[m" "$1";else printf "$f%s\033[m\n" "$1";fi;exit;;esac;shift;done
