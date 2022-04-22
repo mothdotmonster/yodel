@@ -6,7 +6,15 @@ yodel is a script to make the outputting of formatted text easier, primarily int
 
 ***
 
-USAGE:
+### INSTALLATION:
+
+For casual users, just get the [latest release from the Releases section](https://github.com/mothdotmonster/yodel/releases/latest/download/yodel).
+
+If youd like to embed it as a function into your own scripts to avoid external dependencies, a minified version is available in the scripts folder as yodel-mini. Simply copy it from there and add is as a function into your shell script.
+
+***
+
+### USAGE:
 
 -b / --bold - print bold text  
 -l / --light - print light text  
